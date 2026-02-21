@@ -1,8 +1,11 @@
-let enabled = false;
-let readingEnabled = false;
+const TAB_STATES_KEY = "ease_tab_states";
 const READING_FONT_KEY = "easeReadingFont";
 const DEFAULT_READING_FONT = "opendyslexic";
 const ALLOWED_READING_FONTS = new Set(["opendyslexic", "lexend", "comicsans"]);
+
+let enabled = false;
+let readingEnabled = false;
+let focusEnabled = false;
 
 const CONTENT_SCRIPT_FILES = [
   "content/utils/dom.js",
@@ -41,6 +44,24 @@ function sendMessageWithInjection(tabId, message, callback) {
     }
 
     callback(null, res);
+  });
+}
+
+function getTabState(tabId) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get([TAB_STATES_KEY], (result) => {
+      const all = result[TAB_STATES_KEY] || {};
+      resolve(all[tabId] || {});
+    });
+  });
+}
+
+function setTabState(tabId, partial) {
+  chrome.storage.local.get([TAB_STATES_KEY], (result) => {
+    const all = result[TAB_STATES_KEY] || {};
+    const current = all[tabId] || {};
+    all[tabId] = { ...current, ...partial };
+    chrome.storage.local.set({ [TAB_STATES_KEY]: all });
   });
 }
 
@@ -83,6 +104,7 @@ document.getElementById("highContrast").addEventListener("click", async () => {
   if (!tab?.id) return;
 
   enabled = !enabled;
+  setTabState(tab.id, { highContrast: enabled });
 
   sendToggleHighContrast(tab.id, enabled, (err, res) => {
     if (err) console.error("SendMessage error:", err.message);
@@ -95,6 +117,7 @@ document.getElementById("reading").addEventListener("click", async () => {
   if (!tab?.id) return;
 
   readingEnabled = !readingEnabled;
+  setTabState(tab.id, { readingMode: readingEnabled });
 
   sendMessageWithInjection(tab.id, { type: "TOGGLE_READING_MODE", enabled: readingEnabled }, (err, res) => {
     if (err) {
@@ -106,32 +129,47 @@ document.getElementById("reading").addEventListener("click", async () => {
 });
 
 document.getElementById("readingFont").addEventListener("change", async (event) => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const selectedFont = event.target.value;
   setStoredReadingFont(selectedFont);
+  if (tab?.id) setTabState(tab.id, { readingFont: selectedFont });
   await applyReadingFontToActiveTab(selectedFont);
 });
 
-async function initializeReadingFontSelection() {
-  const selectEl = document.getElementById("readingFont");
-  if (!selectEl) return;
+async function syncPopupToTabState(tabId) {
+  const state = await getTabState(tabId);
+  enabled = Boolean(state.highContrast);
+  readingEnabled = Boolean(state.readingMode);
+  focusEnabled = Boolean(state.focusMode);
 
-  const { font: storedFont, normalized } = await getStoredReadingFont();
-  selectEl.value = storedFont;
-  if (normalized) {
-    setStoredReadingFont(DEFAULT_READING_FONT);
+  const selectEl = document.getElementById("readingFont");
+  if (selectEl) {
+    const font = state.readingFont && ALLOWED_READING_FONTS.has(state.readingFont)
+      ? state.readingFont
+      : (await getStoredReadingFont()).font;
+    selectEl.value = font;
+    if (!state.readingFont) setStoredReadingFont(font);
   }
-  await applyReadingFontToActiveTab(storedFont);
 }
 
-initializeReadingFontSelection();
+async function initializePopup() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return;
 
-let focusEnabled = false;
+  await syncPopupToTabState(tab.id);
+
+  const selectEl = document.getElementById("readingFont");
+  if (selectEl) await applyReadingFontToActiveTab(selectEl.value);
+}
+
+initializePopup();
 
 document.getElementById("focus").addEventListener("click", async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return;
 
   focusEnabled = !focusEnabled;
+  setTabState(tab.id, { focusMode: focusEnabled });
 
   sendMessageWithInjection(tab.id, {
     type: "TOGGLE_FOCUS_MODE",

@@ -1,5 +1,23 @@
 console.log("[Ease] content script loaded");
 
+function reapplySavedState() {
+  chrome.runtime.sendMessage({ type: "GET_TAB_STATE" }, (state) => {
+    if (!state || typeof state !== "object") return;
+    try {
+      if (state.highContrast) window.__EASE_MODES__?.highContrast?.enable();
+      if (state.readingMode) {
+        window.__EASE_MODES__?.readingMode?.enable();
+        if (state.readingFont) window.__EASE_MODES__?.readingMode?.setFont(state.readingFont);
+      }
+      if (state.focusMode) window.__EASE_MODES__?.focusMode?.enable();
+    } catch (e) {
+      console.warn("[Ease] reapplySavedState:", e);
+    }
+  });
+}
+
+reapplySavedState();
+
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   try {
     if (msg?.type === "TOGGLE_HIGH_CONTRAST") {
