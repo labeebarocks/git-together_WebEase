@@ -1,27 +1,111 @@
+:root {
+	--ease-purple: #847cb7;
+	--ease-rose: #be696e;
+	--ease-cream: #fffbfe;
+	--ease-blue: #46639d;
+	--ease-pink: #946c8e;
+	--ease-sage: #7e5dae;
+}
+
+* {
+	box-sizing: border-box;
+}
+
 body {
-	min-width: 240px;
-	padding: 10px;
-	font-family: Arial, sans-serif;
+	min-width: 280px;
+	margin: 0;
+	padding: 14px;
+	font-family: "Segoe UI", Arial, sans-serif;
+	background: linear-gradient(180deg, var(--ease-cream) 0%, var(--ease-pink) 100%);
+	color: var(--ease-blue);
 }
 
 h3 {
-	margin: 0 0 10px;
+	margin: 0 0 12px;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: 0.2px;
+	color: var(--ease-purple);
 }
 
 .font-menu {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 6px;
+	padding: 10px;
 	margin-bottom: 10px;
+	border: 1px solid rgba(132, 124, 183, 0.28);
+	border-radius: 10px;
+	background: rgba(239, 192, 207, 0.28);
 }
 
 .font-menu label {
 	font-size: 12px;
+	font-weight: 600;
+	color: var(--ease-blue);
 }
 
-.font-menu select,
+.font-menu select {
+	width: 100%;
+	padding: 9px 10px;
+	border: 1px solid rgba(132, 124, 183, 0.45);
+	border-radius: 8px;
+	background: var(--ease-cream);
+	color: var(--ease-blue);
+	outline: none;
+}
+
+.font-menu select:focus {
+	border-color: var(--ease-purple);
+	box-shadow: 0 0 0 3px rgba(132, 124, 183, 0.2);
+}
+
 button {
 	width: 100%;
-	padding: 8px;
+	padding: 10px;
 	margin-bottom: 8px;
+	border: none;
+	border-radius: 10px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	cursor: pointer;
+	background: var(--ease-purple);
+	color: var(--ease-cream);
+	transition: transform 120ms ease, filter 120ms ease;
+}
+
+button:hover {
+	filter: brightness(1.05);
+	transform: translateY(-1px);
+}
+
+button:active {
+	transform: translateY(0);
+	filter: brightness(0.98);
+}
+
+button:focus-visible {
+	outline: 3px solid rgba(70, 99, 157, 0.35);
+	outline-offset: 1px;
+}
+
+#seizure {
+	background: var(--ease-rose);
+}
+
+#highContrast {
+	background: var(--ease-blue);
+}
+
+#reading {
+	background: var(--ease-purple);
+}
+
+#focus {
+	background: var(--ease-pink);
+}
+
+#motor {
+	background: var(--ease-sage);
+	margin-bottom: 0;
 }
