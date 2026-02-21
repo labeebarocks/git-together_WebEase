@@ -6,12 +6,14 @@ const ALLOWED_READING_FONTS = new Set(["opendyslexic", "lexend", "comicsans"]);
 let enabled = false;
 let readingEnabled = false;
 let focusEnabled = false;
+let motorEnabled = false;
 
 const CONTENT_SCRIPT_FILES = [
   "content/utils/dom.js",
   "content/modes/contrastMode.js",
   "content/modes/readingMode.js",
   "content/modes/focusMode.js",
+  "content/modes/motorMode.js",
   "content/contentScript.js"
 ];
 
@@ -141,6 +143,7 @@ async function syncPopupToTabState(tabId) {
   enabled = Boolean(state.highContrast);
   readingEnabled = Boolean(state.readingMode);
   focusEnabled = Boolean(state.focusMode);
+  motorEnabled = Boolean(state.motorMode);
 
   const selectEl = document.getElementById("readingFont");
   if (selectEl) {
@@ -180,5 +183,24 @@ document.getElementById("focus").addEventListener("click", async () => {
       return;
     }
     console.log("Focus Mode response:", res);
+  });
+});
+
+document.getElementById("motor").addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return;
+
+  motorEnabled = !motorEnabled;
+  setTabState(tab.id, { motorMode: motorEnabled });
+
+  sendMessageWithInjection(tab.id, {
+    type: "TOGGLE_MOTOR_MODE",
+    enabled: motorEnabled
+  }, (err, res) => {
+    if (err) {
+      console.error("SendMessage error:", err.message);
+      return;
+    }
+    console.log("Motor Mode response:", res);
   });
 });

@@ -10,6 +10,7 @@ function reapplySavedState() {
         if (state.readingFont) window.__EASE_MODES__?.readingMode?.setFont(state.readingFont);
       }
       if (state.focusMode) window.__EASE_MODES__?.focusMode?.enable();
+      if (state.motorMode) window.__EASE_MODES__?.motorMode?.enable();
     } catch (e) {
       console.warn("[Ease] reapplySavedState:", e);
     }
@@ -48,6 +49,13 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       const mode = window.__EASE_MODES__?.focusMode;
       if (!mode) return sendResponse({ ok: false, error: "focusMode not found" });
 
+      msg.enabled ? mode.enable() : mode.disable();
+      return sendResponse({ ok: true });
+    }
+
+    if (msg?.type === "TOGGLE_MOTOR_MODE") {
+      const mode = window.__EASE_MODES__?.motorMode;
+      if (!mode) return sendResponse({ ok: false, error: "motorMode not found" });
       msg.enabled ? mode.enable() : mode.disable();
       return sendResponse({ ok: true });
     }
