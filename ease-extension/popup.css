@@ -4,6 +4,7 @@
 	--ease-cream: #fffbfe;
 	--ease-blue: #46639d;
 	--ease-pink: #946c8e;
+	--ease-sage: #7e5dae;
 }
 
 * {
@@ -102,5 +103,9 @@ button:focus-visible {
 
 #focus {
 	background: var(--ease-pink);
+}
+
+#motor {
+	background: var(--ease-sage);
 	margin-bottom: 0;
 }
