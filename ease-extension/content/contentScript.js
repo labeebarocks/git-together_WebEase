@@ -15,3 +15,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     return sendResponse({ ok: false, error: String(e) });
   }
 });
+
+// Reading Mode
+if (msg?.type === "TOGGLE_READING_MODE") {
+  const mode = window.__EASE_MODES__?.readingMode;
+  if (!mode) return sendResponse({ ok: false, error: "readingMode not found" });
+
+  msg.enabled ? mode.enable() : mode.disable();
+  return sendResponse({ ok: true });
+}

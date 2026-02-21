@@ -16,9 +16,16 @@
       "js": [
         "content/utils/dom.js",
         "content/modes/contrastMode.js",
+        "content/modes/readingMode.js",
         "content/contentScript.js"
       ],
       "css": ["styles.css"]
     }
-  ]
+  ],
+  "web_accessible_resources": [
+  {
+    "resources": ["content/assets/*"],
+    "matches": ["<all_urls>"]
+  }
+]
 }

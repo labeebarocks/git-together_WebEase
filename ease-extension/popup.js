@@ -46,3 +46,24 @@ document.getElementById("highContrast").addEventListener("click", async () => {
     else console.log("Response:", res);
   });
 });
+
+let readingEnabled = false;
+
+document.getElementById("reading").addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return;
+
+  readingEnabled = !readingEnabled;
+
+  chrome.tabs.sendMessage(
+    tab.id,
+    { type: "TOGGLE_READING_MODE", enabled: readingEnabled },
+    (res) => {
+      if (chrome.runtime.lastError) {
+        console.error("SendMessage error:", chrome.runtime.lastError.message);
+        return;
+      }
+      console.log("Reading Mode response:", res);
+    }
+  );
+});
