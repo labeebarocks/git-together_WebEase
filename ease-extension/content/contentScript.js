@@ -1,5 +1,3 @@
-import { enableSeizureSafe, disableSeizureSafe } from "./modes/seizureSafe.js";
-
 console.log("[Ease] content script loaded");
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
@@ -15,11 +13,5 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     return sendResponse({ ok: false, error: "unknown message type" });
   } catch (e) {
     return sendResponse({ ok: false, error: String(e) });
-  }
-
-  if (msg.type === "TOGGLE_SEIZURE_SAFE") {
-    if (msg.enabled) enableSeizureSafe();
-    else disableSeizureSafe();
-    sendResponse({ ok: true });
   }
 });
