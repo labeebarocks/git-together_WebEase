@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
   <body>
     <h3>Ease Accessibility</h3>
+    <div class="font-menu">
+      <label for="readingFont">Reading Font</label>
+      <select id="readingFont">
+        <option value="opendyslexic">OpenDyslexic</option>
+        <option value="lexend">Lexend</option>
+        <option value="comicsans">Comic Sans</option>
+      </select>
+    </div>
     <button id="seizure">Seizure Safe Mode</button>
     <button id="highContrast"> High Contrast</button>
-
+    <button id="reading">Reading Mode</button>
     <script src="popup.js"></script>
   </body>
 </html>

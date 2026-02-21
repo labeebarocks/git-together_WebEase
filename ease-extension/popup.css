@@ -1,0 +1,27 @@
+body {
+	min-width: 240px;
+	padding: 10px;
+	font-family: Arial, sans-serif;
+}
+
+h3 {
+	margin: 0 0 10px;
+}
+
+.font-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-bottom: 10px;
+}
+
+.font-menu label {
+	font-size: 12px;
+}
+
+.font-menu select,
+button {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 8px;
+}
