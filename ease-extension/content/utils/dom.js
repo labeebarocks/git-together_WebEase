@@ -1,14 +1,18 @@
-export function injectStyleTag(id, cssText) {
-  const existing = document.getElementById(id);
-  if (existing) return;
+(function () {
+  function injectStyleTag(id, cssText) {
+    const existing = document.getElementById(id);
+    if (existing) return;
 
-  const style = document.createElement("style");
-  style.id = id;
-  style.textContent = cssText;
-  document.documentElement.appendChild(style);
-}
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = cssText;
+    document.documentElement.appendChild(style);
+  }
 
-export function removeStyleTag(id) {
-  const el = document.getElementById(id);
-  if (el) el.remove();
-}
+  function removeStyleTag(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  window.easeDOM = { injectStyleTag, removeStyleTag };
+})();

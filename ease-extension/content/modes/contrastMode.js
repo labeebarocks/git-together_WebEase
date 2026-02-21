@@ -1,8 +1,6 @@
-import { injectStyleTag, removeStyleTag } from "../utils/dom.js";
-
-const STYLE_ID = "ease-high-contrast-style";
-
-const CSS = `
+(function () {
+  const STYLE_ID = "ease-high-contrast-style";
+  const CSS = `
   /* High contrast overrides (MVP) */
   html, body {
     background: #000 !important;
@@ -34,10 +32,13 @@ const CSS = `
   }
 `;
 
-export function enableHighContrast() {
-  injectStyleTag(STYLE_ID, CSS);
-}
+  function enableHighContrast() {
+    window.easeDOM.injectStyleTag(STYLE_ID, CSS);
+  }
 
-export function disableHighContrast() {
-  removeStyleTag(STYLE_ID);
-}
+  function disableHighContrast() {
+    window.easeDOM.removeStyleTag(STYLE_ID);
+  }
+
+  window.easeHighContrast = { enableHighContrast, disableHighContrast };
+})();
