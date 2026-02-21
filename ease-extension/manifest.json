@@ -17,6 +17,7 @@
         "content/utils/dom.js",
         "content/modes/contrastMode.js",
         "content/modes/readingMode.js",
+        "content/modes/focusMode.js",
         "content/contentScript.js"
       ],
       "css": ["styles.css"]
