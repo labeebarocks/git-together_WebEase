@@ -18,6 +18,14 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       return sendResponse({ ok: true });
     }
 
+    if (msg?.type === "SET_READING_FONT") {
+      const mode = window.__EASE_MODES__?.readingMode;
+      if (!mode?.setFont) return sendResponse({ ok: false, error: "readingMode setFont not found" });
+
+      mode.setFont(msg.font);
+      return sendResponse({ ok: true });
+    }
+
     return sendResponse({ ok: false, error: "unknown message type" });
   } catch (e) {
     return sendResponse({ ok: false, error: String(e) });
