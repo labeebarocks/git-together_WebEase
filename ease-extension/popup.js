@@ -1,4 +1,5 @@
 let enabled = false;
+let seizureEnabled = false;
 
 const CONTENT_SCRIPT_FILES = [
   "content/utils/dom.js",
@@ -7,18 +8,31 @@ const CONTENT_SCRIPT_FILES = [
   "content/contentScript.js"
 ];
 
-function sendToggleHighContrast(tabId, enabled, callback) {
-  chrome.tabs.sendMessage(
-    tabId,
-    { type: "TOGGLE_HIGH_CONTRAST", enabled },
-    (res) => {
-      if (chrome.runtime.lastError) {
-        callback(chrome.runtime.lastError);
-        return;
+function sendMessageWithInjection(tabId, message, callback) {
+  chrome.tabs.sendMessage(tabId, message, async (res) => {
+    if (chrome.runtime.lastError) {
+      const err = chrome.runtime.lastError;
+      if (err.message && err.message.includes("Receiving end does not exist")) {
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId },
+            files: CONTENT_SCRIPT_FILES
+          });
+          chrome.tabs.sendMessage(tabId, message, (res2) => {
+            if (chrome.runtime.lastError) callback(chrome.runtime.lastError);
+            else callback(null, res2);
+          });
+          return;
+        } catch (e) {
+          callback(e);
+          return;
+        }
       }
-      callback(null, res);
+      callback(err);
+      return;
     }
-  );
+    callback(null, res);
+  });
 }
 
 document.getElementById("highContrast").addEventListener("click", async () => {
@@ -27,56 +41,20 @@ document.getElementById("highContrast").addEventListener("click", async () => {
 
   enabled = !enabled;
 
-  sendToggleHighContrast(tab.id, enabled, async (err, res) => {
-    if (err && err.message && err.message.includes("Receiving end does not exist")) {
-      try {
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: CONTENT_SCRIPT_FILES
-        });
-        sendToggleHighContrast(tab.id, enabled, (err2, res2) => {
-          if (err2) console.error("SendMessage error:", err2.message);
-          else console.log("Response:", res2);
-        });
-      } catch (e) {
-        console.error("Inject error:", e);
-      }
-      return;
-    }
+  sendMessageWithInjection(tab.id, { type: "TOGGLE_HIGH_CONTRAST", enabled }, (err, res) => {
     if (err) console.error("SendMessage error:", err.message);
     else console.log("Response:", res);
   });
 });
 
-
-
-
-// Seizure Safe Mode
-let seizureEnabled = false;
-
-function sendToggleSeizure(tabId, enabled, callback) {
-  chrome.tabs.sendMessage(
-    tabId,
-    { type: "TOGGLE_SEIZURE_SAFE", enabled },
-    (res) => {
-      if (chrome.runtime.lastError) {
-        callback(chrome.runtime.lastError);
-        return;
-      }
-      callback(null, res);
-    }
-  );
-}
-
 document.getElementById("seizure").addEventListener("click", async () => {
-  
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id) return;
 
   seizureEnabled = !seizureEnabled;
 
-  sendToggleSeizure(tab.id, seizureEnabled, (err, res) => {
-    if (err) console.error(err.message);
-    else console.log(res);
+  sendMessageWithInjection(tab.id, { type: "TOGGLE_SEIZURE_SAFE", enabled: seizureEnabled }, (err, res) => {
+    if (err) console.error("Seizure Safe error:", err.message);
+    else console.log("Response:", res);
   });
 });

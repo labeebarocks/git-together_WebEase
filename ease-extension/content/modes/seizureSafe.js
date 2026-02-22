@@ -5,6 +5,7 @@
     * {
       animation: none !important;
       transition: none !important;
+      scroll-behavior: auto !important;
     }
 
     video, audio {
