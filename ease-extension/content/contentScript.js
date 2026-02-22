@@ -4,6 +4,7 @@ function reapplySavedState() {
   chrome.runtime.sendMessage({ type: "GET_TAB_STATE" }, (state) => {
     if (!state || typeof state !== "object") return;
     try {
+      if (state.seizureSafe) window.__EASE_MODES__?.seizureSafe?.enable();
       if (state.highContrast) window.__EASE_MODES__?.highContrast?.enable();
       if (state.readingMode) {
         window.__EASE_MODES__?.readingMode?.enable();
@@ -21,6 +22,14 @@ reapplySavedState();
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   try {
+    if (msg?.type === "TOGGLE_SEIZURE_SAFE") {
+      const mode = window.__EASE_MODES__?.seizureSafe;
+      if (!mode) return sendResponse({ ok: false, error: "seizureSafe not found" });
+
+      msg.enabled ? mode.enable() : mode.disable();
+      return sendResponse({ ok: true });
+    }
+    
     if (msg?.type === "TOGGLE_HIGH_CONTRAST") {
       const mode = window.__EASE_MODES__?.highContrast;
       if (!mode) return sendResponse({ ok: false, error: "highContrast mode not found" });
