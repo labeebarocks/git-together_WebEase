@@ -70,6 +70,12 @@ WebEase/
 └── README.md
 ```
 
+## Future Works 
+-  SeizureMode which disables animations and pauses videos to prevent flashing triggers.
+- Expand automated scanning and issue detection  
+- Add contextual explanations for accessibility violations  
+- Support granular color customization  
+- Publish WebEase publicly on the Chrome Web Store  
 ---
 
 ## Credits
