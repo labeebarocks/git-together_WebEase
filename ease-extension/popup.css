@@ -15,6 +15,8 @@ body {
 	min-width: 280px;
 	margin: 0;
 	padding: 14px;
+	padding-top: 4px;
+	min-height: 100vh;
 	font-family: "Segoe UI", Arial, sans-serif;
 	background: linear-gradient(180deg, var(--ease-cream) 0%, var(--ease-pink) 100%);
 	color: var(--ease-blue);
@@ -22,10 +24,12 @@ body {
 
 h3 {
 	margin: 0 0 12px;
-	font-size: 16px;
+	font-size: 22px;
 	font-weight: 700;
 	letter-spacing: 0.2px;
 	color: var(--ease-purple);
+	display: flex;
+	justify-content: center;
 }
 
 .font-menu {
@@ -89,6 +93,122 @@ button:focus-visible {
 	outline-offset: 1px;
 }
 
+/* Mode row layout: button + status pill */
+.mode-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  /* default accent */
+  --mode-accent: var(--ease-purple);
+}
+
+.mode-btn {
+  flex: 1;
+  width: auto;
+  margin-bottom: 0; /* override your default button spacing */
+}
+
+/* Status pill */
+.mode-status {
+  min-width: 92px;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+
+  border: 1px solid rgba(70, 99, 157, 0.25);
+  background: rgba(255, 251, 254, 0.65);
+  color: var(--ease-blue);
+}
+
+/* Enabled: uses mode accent color so it matches the button */
+.mode-status[data-state="enabled"] {
+  border-color: var(--mode-accent);
+  color: var(--mode-accent);
+  background: rgba(255, 251, 254, 0.85);
+  box-shadow: 0 2px 10px rgba(132, 124, 183, 0.18);
+}
+
+/* Disabled: neutral */
+.mode-status[data-state="disabled"] {
+  opacity: 0.9;
+}
+
+/* Not available: use rose warning tone */
+.mode-status[data-state="na"] {
+  border-color: var(--ease-rose);
+  color: var(--ease-rose);
+  background: rgba(190, 105, 110, 0.12);
+}
+
+/* Accent per mode (ties pill to the button theme) */
+.mode-seizure { --mode-accent: var(--ease-rose); }
+.mode-contrast { --mode-accent: var(--ease-blue); }
+.mode-reading { --mode-accent: var(--ease-purple); }
+.mode-focus { --mode-accent: var(--ease-pink); }
+.mode-motor { --mode-accent: var(--ease-sage); }
+
+/* Tooltip container */
+.tooltip-wrapper {
+  position: relative;
+}
+
+/* Tooltip box */
+.tooltip {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 6px;
+
+  width: 230px;
+  padding: 10px 12px;
+
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 1.4;
+
+  background: rgba(255, 251, 254, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(132, 124, 183, 0.25);
+
+  box-shadow: 0 10px 25px rgba(132, 124, 183, 0.18);
+
+  color: var(--ease-blue);
+
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 10;
+}
+
+/* Arrow */
+.tooltip::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 18px;
+
+  width: 10px;
+  height: 10px;
+
+  background: inherit;
+  border-left: 1px solid rgba(132, 124, 183, 0.25);
+  border-top: 1px solid rgba(132, 124, 183, 0.25);
+
+  transform: rotate(45deg);
+}
+
+/* Show tooltip on hover */
+.tooltip-wrapper:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #seizure {
 	background: var(--ease-rose);
 }
@@ -107,5 +227,4 @@ button:focus-visible {
 
 #motor {
 	background: var(--ease-sage);
-	margin-bottom: 0;
 }

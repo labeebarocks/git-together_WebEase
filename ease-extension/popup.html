@@ -1,23 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <h3>Ease Accessibility</h3>
+    <h3>WebEase</h3>
     <div class="font-menu">
-      <label for="readingFont">Reading Font</label>
+      <label for="readingFont">Reading Mode Font</label>
       <select id="readingFont">
         <option value="opendyslexic">OpenDyslexic</option>
         <option value="lexend">Lexend</option>
         <option value="comicsans">Comic Sans</option>
       </select>
     </div>
-    <button id="seizure">Seizure Safe Mode</button>
-    <button id="highContrast">High Contrast</button>
-    <button id="reading">Reading Mode</button>
-    <button id="focus">Focus Mode</button>
-    <button id="motor">Motor Accessibility</button>
+
+    <!-- Mode rows -->
+    <div class="mode-row mode-seizure">
+      <button id="seizure" class="mode-btn">Seizure Safe Mode</button>
+      <span id="seizureStatus" class="mode-status" data-state="disabled">Disabled</span>
+    </div>
+
+    <div class="mode-row mode-contrast">
+      <button id="highContrast" class="mode-btn">High Contrast</button>
+      <span id="highContrastStatus" class="mode-status" data-state="disabled">Disabled</span>
+    </div>
+
+    <div class="mode-row mode-reading">
+      <button id="reading" class="mode-btn">Reading Mode</button>
+      <span id="readingStatus" class="mode-status" data-state="disabled">Disabled</span>
+    </div>
+
+    <div class="mode-row mode-focus">
+      <button id="focus" class="mode-btn">Focus Mode</button>
+      <span id="focusStatus" class="mode-status" data-state="disabled">Disabled</span>
+    </div>
+
+    <div class="mode-row mode-motor tooltip-wrapper">
+      <button id="motor" class="mode-btn">Motor Accessibility</button>
+      <span id="motorStatus" class="mode-status" data-state="disabled">Disabled</span>
+      <div class="tooltip">
+        Press <strong>Tab</strong> to move across the page.<br>
+        Press <strong>Enter</strong> to click the selected element.
+      </div>
+    </div>
+
     <script src="popup.js"></script>
   </body>
 </html>
