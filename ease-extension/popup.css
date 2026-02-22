@@ -1,10 +1,10 @@
 :root {
-	--ease-purple: #847cb7;
 	--ease-rose: #be696e;
-	--ease-cream: #fffbfe;
-	--ease-blue: #46639d;
 	--ease-pink: #946c8e;
+	--ease-purple:#847cb7;
 	--ease-sage: #7e5dae;
+	--ease-blue: #46639d;
+	--ease-cream: #fffbfe;
 }
 
 * {
@@ -146,11 +146,11 @@ button:focus-visible {
 }
 
 /* Accent per mode (ties pill to the button theme) */
-.mode-seizure { --mode-accent: var(--ease-rose); }
-.mode-contrast { --mode-accent: var(--ease-blue); }
-.mode-reading { --mode-accent: var(--ease-purple); }
-.mode-focus { --mode-accent: var(--ease-pink); }
+.mode-contrast { --mode-accent: var(--ease-rose); }
+.mode-reading { --mode-accent: var(--ease-pink); }
+.mode-focus { --mode-accent: var(--ease-purple); }
 .mode-motor { --mode-accent: var(--ease-sage); }
+.mode-seizure { --mode-accent: var(--ease-blue); }
 
 /* Tooltip container */
 .tooltip-wrapper {
@@ -209,22 +209,22 @@ button:focus-visible {
   transform: translateY(0);
 }
 
-#seizure {
+#highContrast {
 	background: var(--ease-rose);
 }
 
-#highContrast {
-	background: var(--ease-blue);
-}
-
 #reading {
-	background: var(--ease-purple);
+	background: var(--ease-pink);
 }
 
 #focus {
-	background: var(--ease-pink);
+	background: var(--ease-purple);
 }
 
 #motor {
 	background: var(--ease-sage);
+}
+
+#seizure {
+	background: var(--ease-blue);
 }
