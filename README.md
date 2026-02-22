@@ -1,7 +1,7 @@
 # WebEase
 
 **An adaptive accessibility Chrome extension that makes any webpage easier to use.**  
-Toggle modes like high contrast, reading fonts, seizure-safe, focus highlighting, and motor (keyboard) support—per tab.
+Toggle modes like high contrast, reading fonts, seizure-safe, focus highlighting, and motor (keyboard) support-per tab.
 
 ---
 
